@@ -29,20 +29,9 @@ typedef void(^sureBlock)(UIButton *sender);
 @property(nonatomic,copy) sureBlock sureBlock;
 @property(nonatomic,assign) enterAnimitionType enterAnimitionType;
 
--(void)setTitle:(NSString *)title message:(NSString *)message cancleTitle:(NSString *)cancleTitle sureTitle:(NSString *)sureTitle enterAnimitionType:(enterAnimitionType)enterAnimitionType;
+//-(void)setTitle:(NSString *)title message:(NSString *)message cancleTitle:(NSString *)cancleTitle sureTitle:(NSString *)sureTitle enterAnimitionType:(enterAnimitionType)enterAnimitionType;
 
--(void)setCustomTitle:(NSString *)title message:(NSString *)message imageNmae:(NSString *)imageName;
 
-+(void)showAlertViewWithTitle:(NSString *)title
-                      message:(NSString *)message
-                  cancleTitle:(NSString *)cancleTitle
-             cancleTitleColor:(UIColor *)cancleTitleColor
-        cancleBackGroundColor:(UIColor *)cancleBackGroundColor
-                 cancleAction:(cancleBlock)cancleAction
-                    sureTitle:(NSString *)sureTitle
-               sureTitleColor:(UIColor *)sureTitleColor
-          sureBackGroundColor:(UIColor *)sureBackGroundColor
-                   sureAction:(sureBlock)sureAction;
 
 +(void)showAlertViewWithTitle:(NSString *)title
                       message:(NSString *)message
@@ -50,8 +39,14 @@ typedef void(^sureBlock)(UIButton *sender);
                  cancleAction:(cancleBlock)cancleAction
                     sureTitle:(NSString *)sureTitle
                    sureAction:(sureBlock)sureAction;
-+(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName cancleAction:(cancleBlock)cancleAction sureAction:(sureBlock)sureAction;
+
++(void)dismiss;
 //设置按钮的颜色
-+(void)setCancleBackgroundColor;
++(void)setCancleBackgroundColor:(UIColor *)cancleBackgroundColor
+               cancleTitleColor:(UIColor *)cancleTitleColor
+            sureBackgroundColor:(UIColor *)sureBackgroundColor
+                 sureTitleColor:(UIColor *)sureTitleColor;
+//设置背景图片
++(void)setImageName:(NSString *)imageName;
 
 @end

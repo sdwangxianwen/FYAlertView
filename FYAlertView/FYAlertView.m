@@ -44,7 +44,7 @@
     self.cancleBtn = [[UIButton alloc] init];
     [backView addSubview:self.cancleBtn];
     [self.cancleBtn setTitle:@"取消" forState:(UIControlStateNormal)];
-    [self.cancleBtn setBackgroundColor:[UIColor whiteColor]];
+    [self.cancleBtn setBackgroundColor:[UIColor lightGrayColor]];
     [self.cancleBtn setTitleColor:[UIColor blackColor] forState:(UIControlStateNormal)];
     self.cancleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [self.cancleBtn addTarget:self action:@selector(canclebtnClick:) forControlEvents:(UIControlEventTouchUpInside)];
@@ -57,10 +57,6 @@
     [self.sureBtn setTitleColor:[UIColor whiteColor] forState:(UIControlStateNormal)];
     self.sureBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [self.sureBtn addTarget:self action:@selector(surebtnClick:) forControlEvents:(UIControlEventTouchUpInside)];
-    
-    self.cancleBtn.layer.borderWidth = 0.5;
-    self.cancleBtn.layer.borderColor = self.sureBtn.backgroundColor.CGColor;
-    
     
     self.titleLable = [[UILabel alloc] init];
     self.titleLable.font = [UIFont systemFontOfSize:18];
@@ -82,11 +78,13 @@
     [backView addSubview:self.messageLabel];
 }
 -(void)surebtnClick:(UIButton *)sender {
+    [self removeFromSuperview];
     if (self.sureBlock) {
         self.sureBlock(sender);
     }
 }
 -(void)canclebtnClick:(UIButton *)sender {
+    [self removeFromSuperview];
     if (self.cancleBlock) {
         self.cancleBlock(sender);
     }
@@ -98,15 +96,13 @@
         return;
     }
     
-//    CGRect frameNew = [message boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width-120, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.messageLabel.font} context:nil];  // 指定为width，通常都是控件的width都是固定调整height
-    
     CGSize titleSize = [self sizeWithFont:[UIFont systemFontOfSize:18] maxSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 120, MAXFLOAT) string:title];
     self.titleLable.text = title;
 
     CGSize messageSize = [self sizeWithFont:[UIFont systemFontOfSize:15] maxSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 120, MAXFLOAT) string:message];
     self.messageLabel.text = message;
     
-    self.backView.frame = CGRectMake(60, 0, [UIScreen mainScreen].bounds.size.width - 120, titleSize.height + messageSize.height + 84);
+    self.backView.frame = CGRectMake(30, 0, [UIScreen mainScreen].bounds.size.width - 60, titleSize.height + messageSize.height + 84);
     if (self.backView.fy_height < 180) {
         self.backView.fy_height = 180;
     }
@@ -129,39 +125,21 @@
     }
 }
 
--(void)setCustomTitle:(NSString *)title message:(NSString *)message imageNmae:(NSString *)imageName {
-    CGSize titleSize = [self sizeWithFont:[UIFont systemFontOfSize:18] maxSize:CGSizeMake(self.titleLable.fy_width, MAXFLOAT) string:title];
-    self.titleLable.text = title;
-    CGSize messageSize = [self sizeWithFont:[UIFont systemFontOfSize:15] maxSize:CGSizeMake(self.messageLabel.fy_width, MAXFLOAT) string:message];
-    self.messageLabel.text = message;
-    self.backView.frame = CGRectMake(30, 0, [UIScreen mainScreen].bounds.size.width - 60, titleSize.height + messageSize.height + 10 + 44 + 5 + 5 + 30);
+-(void)resetUI {
+    self.backView.frame = CGRectMake(30, 0, [UIScreen mainScreen].bounds.size.width - 60, self.titleLable.fy_height + self.messageLabel.fy_height + 74);
     if (self.backView.fy_height < 200) {
         self.backView.fy_height = 250;
     }
     self.imageView.hidden = NO;
     self.imageView.frame = CGRectMake(0, 0, self.backView.fy_width, self.backView.fy_height - 74);
-    self.imageView.image = [UIImage imageNamed:imageName];
-    
-    self.titleLable.frame = CGRectMake(10, 10, self.backView.fy_width - 20, titleSize.height);
-     self.messageLabel.frame = CGRectMake(10, self.titleLable.fy_height + 10 + 5, self.backView.fy_width - 20, 30);
-    
-    
     self.cancleBtn.frame = CGRectMake(20, self.backView.fy_height - 74 + 15, (self.backView.fy_width - 60)/2, 44);
-    [self.cancleBtn setTitle:@"取消" forState:(UIControlStateNormal)];
-    [self.cancleBtn setBackgroundColor:[UIColor lightGrayColor]];
     self.cancleBtn.layer.cornerRadius = 22;
     self.cancleBtn.clipsToBounds = YES;
-    [self.cancleBtn setTintColor:[UIColor whiteColor]];
-    
     self.sureBtn.frame = CGRectMake(CGRectGetMaxX(self.cancleBtn.frame) + 20, self.backView.fy_height - 74 + 15, (self.backView.fy_width - 60)/2, 44);
-    [self.sureBtn setTitle:@"确定" forState:(UIControlStateNormal)];
-    [self.sureBtn setBackgroundColor:[UIColor greenColor]];
     self.sureBtn.layer.cornerRadius = 22;
     self.sureBtn.clipsToBounds = YES;
-    [self.sureBtn setTintColor:[UIColor whiteColor]];
-    self.backView.center = [UIApplication sharedApplication].keyWindow.center;
-    
     [self animationWithLayer:self.backView.layer duration:0.4 values:@[@0.0,@0.5,@1.0]];
+    self.backView.center = [UIApplication sharedApplication].keyWindow.center;
 
 }
 
@@ -200,9 +178,21 @@
     return nil;
 }
 
-+(void)setCancleBackgroundColor {
++(void)setCancleBackgroundColor:(UIColor *)cancleBackgroundColor
+               cancleTitleColor:(UIColor *)cancleTitleColor
+            sureBackgroundColor:(UIColor *)sureBackgroundColor
+                 sureTitleColor:(UIColor *)sureTitleColor {
     FYAlertView *alertView = [self getAlertView];
-    [alertView.cancleBtn setBackgroundColor:[UIColor redColor]];
+    [alertView.cancleBtn setBackgroundColor:cancleBackgroundColor];
+    [alertView.cancleBtn setTitleColor:cancleTitleColor forState:(UIControlStateNormal)];
+    [alertView.sureBtn setBackgroundColor:sureBackgroundColor];
+    [alertView.sureBtn setTitleColor:sureTitleColor forState:(UIControlStateNormal)];
+}
++(void)setImageName:(NSString *)imageName {
+    FYAlertView *alertView = [self getAlertView];
+    alertView.imageView.hidden = NO;
+    alertView.imageView.image = [UIImage imageNamed:imageName];
+    [alertView resetUI];
 }
 
 
@@ -248,28 +238,8 @@
     [self showAlertViewWithTitle:title message:message cancleTitle:cancleTitle cancleTitleColor:nil cancleBackGroundColor:nil cancleAction:cancleAction sureTitle:sureTitle sureTitleColor:nil sureBackGroundColor:nil sureAction:sureAction];
 }
 
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    switch (self.enterAnimitionType) {
-        case enterAnimitionTypeScale:
-            [self animationWithLayer:self.backView.layer duration:0.4 values:@[@1.0, @0.66, @0.33, @0.01]];
-            break;
-        default:
-            
-            break;
-    }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self removeFromSuperview];
-    });
-    
-    
-}
-+(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName cancleAction:(cancleBlock)cancleAction sureAction:(sureBlock)sureAction {
-    FYAlertView *alertView = [[FYAlertView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [alertView setCustomTitle:title message:message imageNmae:imageName];
-    alertView.cancleBlock = cancleAction;
-    alertView.sureBlock = sureAction;
-    [[UIApplication sharedApplication].keyWindow addSubview:alertView];
++(void)dismiss {
+    [[self getAlertView] removeFromSuperview];
 }
 
 
