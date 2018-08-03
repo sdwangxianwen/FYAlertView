@@ -113,10 +113,7 @@
 				211CC32B211305EA00B067D8 /* AppDelegate.m */,
 				211CC32D211305EA00B067D8 /* ViewController.h */,
 				211CC32E211305EA00B067D8 /* ViewController.m */,
-				211CC35F2113061F00B067D8 /* FYAlertView.h */,
-				211CC3602113061F00B067D8 /* FYAlertView.m */,
-				211CC362211309C500B067D8 /* UIView+FYExtension.h */,
-				211CC363211309C500B067D8 /* UIView+FYExtension.m */,
+				211CC36521143E9900B067D8 /* FYAlertView */,
 				211CC330211305EA00B067D8 /* Main.storyboard */,
 				211CC336211305EB00B067D8 /* Assets.xcassets */,
 				211CC338211305EB00B067D8 /* LaunchScreen.storyboard */,
@@ -143,6 +140,17 @@
 				211CC353211305EC00B067D8 /* Info.plist */,
 			);
 			path = FYAlertViewUITests;
+			sourceTree = "<group>";
+		};
+		211CC36521143E9900B067D8 /* FYAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				211CC35F2113061F00B067D8 /* FYAlertView.h */,
+				211CC3602113061F00B067D8 /* FYAlertView.m */,
+				211CC362211309C500B067D8 /* UIView+FYExtension.h */,
+				211CC363211309C500B067D8 /* UIView+FYExtension.m */,
+			);
+			path = FYAlertView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
