@@ -10,13 +10,7 @@
 #import "UIView+FYExtension.h"
 
 @interface FYAlertView ()
-@property(nonatomic,strong) UILabel  *titleLable;
-@property(nonatomic,strong) UILabel  *messageLabel;
-@property(nonatomic,strong) UIButton  *cancleBtn;
-@property(nonatomic,strong) UIButton  *sureBtn;
-@property(nonatomic,strong) UIView *backView;
-@property(nonatomic,strong) UIView  *line;
-@property(nonatomic,strong) UIImageView  *imageView;
+
 @end
 
 @implementation FYAlertView
@@ -103,26 +97,28 @@
     if (!message) {
         return;
     }
-    CGSize titleSize = [self sizeWithFont:[UIFont systemFontOfSize:18] maxSize:CGSizeMake(self.titleLable.fy_width, MAXFLOAT) string:title];
+    
+//    CGRect frameNew = [message boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width-120, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.messageLabel.font} context:nil];  // 指定为width，通常都是控件的width都是固定调整height
+    
+    CGSize titleSize = [self sizeWithFont:[UIFont systemFontOfSize:18] maxSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 120, MAXFLOAT) string:title];
     self.titleLable.text = title;
 
-    CGSize messageSize = [self sizeWithFont:[UIFont systemFontOfSize:15] maxSize:CGSizeMake(self.messageLabel.fy_width, MAXFLOAT) string:message];
+    CGSize messageSize = [self sizeWithFont:[UIFont systemFontOfSize:15] maxSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 120, MAXFLOAT) string:message];
     self.messageLabel.text = message;
     
-    self.backView.frame = CGRectMake(60, 0, [UIScreen mainScreen].bounds.size.width - 120, titleSize.height + messageSize.height + 10 + 44 + 5 + 5);
+    self.backView.frame = CGRectMake(60, 0, [UIScreen mainScreen].bounds.size.width - 120, titleSize.height + messageSize.height + 84);
     if (self.backView.fy_height < 180) {
         self.backView.fy_height = 180;
     }
     self.titleLable.frame = CGRectMake(10, 10, self.backView.fy_width - 20, titleSize.height);
     if (title) {
-        self.line.frame = CGRectMake(0, CGRectGetMaxY(self.titleLable.frame) + 10, self.backView.fy_width, 1);
-         self.messageLabel.frame = CGRectMake(10, self.titleLable.fy_height + 10 + 5, self.backView.fy_width - 20, self.backView.fy_height - 44 - 10 - 10 - self.titleLable.fy_height);
+         self.messageLabel.frame = CGRectMake(10, self.titleLable.fy_height + 10 + 5, self.backView.fy_width - 20, self.backView.fy_height -64 - self.titleLable.fy_height);
     } else {
-         self.messageLabel.frame = CGRectMake(10, 10, self.backView.fy_width - 20, self.backView.fy_height - 44 - 10 - 10 - self.titleLable.fy_height);
+         self.messageLabel.frame = CGRectMake(10, 10, self.backView.fy_width - 20, self.backView.fy_height - 64 - self.titleLable.fy_height);
     }
-   
+  
     self.cancleBtn.frame = CGRectMake(0, self.backView.fy_height - 44, self.backView.fy_width/2, 44);
-     self.sureBtn.frame = CGRectMake(self.cancleBtn.fy_width, self.backView.fy_height - 44, self.backView.fy_width/2, 44);
+    self.sureBtn.frame = CGRectMake(self.cancleBtn.fy_width, self.backView.fy_height - 44, self.backView.fy_width/2, 44);
     
     self.backView.center = [UIApplication sharedApplication].keyWindow.center;
     [self.cancleBtn setTitle:cancleTitle forState:(UIControlStateNormal)];
@@ -192,6 +188,24 @@
     [layer addAnimation:KFAnimation forKey:nil];
 }
 
+
++ (FYAlertView *)getAlertView {
+    NSEnumerator *subviewsEnum = [[UIApplication sharedApplication].keyWindow.subviews reverseObjectEnumerator];
+    for (UIView *subview in subviewsEnum) {
+        if ([subview isKindOfClass:self]) {
+            FYAlertView *alertView = (FYAlertView *)subview;
+            return alertView;
+        }
+    }
+    return nil;
+}
+
++(void)setCancleBackgroundColor {
+    FYAlertView *alertView = [self getAlertView];
+    [alertView.cancleBtn setBackgroundColor:[UIColor redColor]];
+}
+
+
 +(void)showAlertViewWithTitle:(NSString *)title
                       message:(NSString *)message
                   cancleTitle:(NSString *)cancleTitle
@@ -250,10 +264,12 @@
     
     
 }
-+(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName {
-     FYAlertView *alertView = [[FYAlertView alloc] initWithFrame:[UIScreen mainScreen].bounds];
++(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName cancleAction:(cancleBlock)cancleAction sureAction:(sureBlock)sureAction {
+    FYAlertView *alertView = [[FYAlertView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [alertView setCustomTitle:title message:message imageNmae:imageName];
-     [[UIApplication sharedApplication].keyWindow addSubview:alertView];
+    alertView.cancleBlock = cancleAction;
+    alertView.sureBlock = sureAction;
+    [[UIApplication sharedApplication].keyWindow addSubview:alertView];
 }
 
 

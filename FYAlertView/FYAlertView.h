@@ -17,6 +17,14 @@ typedef void(^sureBlock)(UIButton *sender);
 
 
 @interface FYAlertView : UIView
+@property(nonatomic,strong) UILabel  *titleLable;
+@property(nonatomic,strong) UILabel  *messageLabel;
+@property(nonatomic,strong) UIButton  *cancleBtn;
+@property(nonatomic,strong) UIButton  *sureBtn;
+@property(nonatomic,strong) UIView *backView;
+@property(nonatomic,strong) UIView  *line;
+@property(nonatomic,strong) UIImageView  *imageView;
+
 @property(nonatomic,copy) cancleBlock cancleBlock;
 @property(nonatomic,copy) sureBlock sureBlock;
 @property(nonatomic,assign) enterAnimitionType enterAnimitionType;
@@ -42,7 +50,8 @@ typedef void(^sureBlock)(UIButton *sender);
                  cancleAction:(cancleBlock)cancleAction
                     sureTitle:(NSString *)sureTitle
                    sureAction:(sureBlock)sureAction;
-
-+(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName;
++(void)showCustomAlertViewWith:(NSString *)title message:(NSString *)message imageName:(NSString *)imageName cancleAction:(cancleBlock)cancleAction sureAction:(sureBlock)sureAction;
+//设置按钮的颜色
++(void)setCancleBackgroundColor;
 
 @end
